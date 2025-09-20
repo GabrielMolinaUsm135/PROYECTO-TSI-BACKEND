@@ -18,7 +18,11 @@ import {
     CrearPrestamoInstrumentos,
     DevolverInstrumentoPorIdPrestamo,
     CrearPrestamoInsumos,
-    DevolverInsumoPorIdPrestamo
+    DevolverInsumoPorIdPrestamo,
+    ObtenerAlumnoPorNombre,
+    ObtenerAlumnoPorNombreApellido,
+    ObtenerAlumnoPorNombreApellidoPM,
+    ObtenerAlumnoPorApellidoP
 } from "./handlers/alumno";
 
 const router = Router()
@@ -35,9 +39,15 @@ router.get('/ruta/:id', ejemploHandlerById) //siempre dejar los endpoints con id
 //alumno
 router.get('/lista/alumnos', ListarAlumnos) //listar alumnos
 router.get('/alumno/:rut', ObtenerAlumnoPorRut) //obtener un alumno por rut
+router.get('/alumno/buscar/n/:nombre', ObtenerAlumnoPorNombre)
+router.get('/alumno/buscar/n-aP/:nombre/:apellido', ObtenerAlumnoPorNombreApellido) //obtener alumno por nombre y apellido paterno
+router.get('/alumno/buscar/n-aP-aM/:nombre/:apellidoP/:apellidoM', ObtenerAlumnoPorNombreApellidoPM) //obtener alumno por nombre y apellido paterno y materno
+router.get('/alumno/buscar/aP/:apellidoP', ObtenerAlumnoPorApellidoP) //obtener alumno por apellido paterno
+
 router.post('/alumno', CrearAlumno) //crear un alumno
 router.put('/alumno/:rut', ActualizarAlumnoPorRut) //actualizar un alumno por rut
 router.delete('/alumno/:rut', EliminarAlumnoPorRut) //eliminar un alumno por rut
+/*
 router.get('/alumno/:rut/apoderado', ObtenerApoderadoDeAlumno) //obtener el apoderado de un alumno por rut
 router.get('/alumno/:rut/clases', ObtenerClasesDeAlumno) //obtener las clases de un alumno por rut
 router.get('/alumno/:rut/instrumentos', ObtenerInstrumentosDeAlumno) //obtener los instrumentos de un alumno por rut
@@ -46,7 +56,9 @@ router.get('/alumno/:rut/notas', ObtenerNotasDeAlumno) //obtener todas las notas
 router.post('/alumno/:rut/nota/:fecha', CrearNotaParaAlumno) //crear una nota para un alumno por rut
 router.put('/alumno/:rut/nota/:fecha', ActualizarNotaPorRutYFecha) //actualizar una nota por rut y fecha
 router.delete('/alumno/:rut/nota/:fecha', EliminarNotaPorRutYFecha) //eliminar una nota por rut y fecha
+*/
 
+/*
 //prestamos
     //instrumentos
 router.get('/lista/prestamos', ListarPrestamos) //listar prestamos
@@ -57,7 +69,7 @@ router.put('/prestamo/instrumento/:id', DevolverInstrumentoPorIdPrestamo) //devo
     //insumos
 router.post('/prestamo/insumos', CrearPrestamoInsumos) //crear un prestamo de insumos
 router.put('/prestamo/insumo/:id', DevolverInsumoPorIdPrestamo) //devolver un insumo por id de prestamo
-
+*/
 /*
 //apoderado
 router.get('/lista/apoderados',) //listar apoderados
