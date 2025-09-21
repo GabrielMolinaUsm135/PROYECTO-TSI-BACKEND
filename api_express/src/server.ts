@@ -1,6 +1,7 @@
 import Express, { response } from "express";
 import router from './router'
 import db from "./config/database";
+import cors,{CorsOptions} from 'cors'
 
 const server = Express()
 
@@ -16,6 +17,20 @@ async function conectarBD(){
 }
 
 conectarBD()
+
+//CORS
+//!origin es solo para postman, quitar al publicar
+const corsoptions: CorsOptions = {
+  origin: function(origin, callback){
+    if(!origin || origin===process.env.FRONTEND_URL){
+      callback(null,true)
+    }else{
+      callback(new Error("No permitido por CORS"), false)
+    }
+  }
+}
+
+server.use(cors(corsoptions))
 
 //habilitar el uso de json en las peticiones
 server.use(Express.json())
