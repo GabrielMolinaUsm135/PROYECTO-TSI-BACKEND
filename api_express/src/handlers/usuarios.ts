@@ -8,15 +8,15 @@ export const login = async (request: Request, response: Response) => {
  const { username, password } = request.body;
  const SECRET = process.env.SECRET_KEY
  try {
-     //busca el usuario
-    const user = await usuario.findByPk(username);
+     // busca el usuario por el campo 'username'
+    const user = await usuario.findOne({ where: { username } });
     if (!user) {
         return response.status(401).json({ error: "Usuario no encontrado" });
     }
     if (!bcrypt.compareSync(password, user.password)){
         return response.status(401).json({ error: "Contraseña incorrecta" });
     }
-    //Al llegar aqui el usuario y la contraseña son correctos
+    // Al llegar aqui el usuario y la contraseña son correctos
     const token =  jwt.sign({username:user.username}, SECRET, {expiresIn:"1h"});
     response.json({token});
  } catch (error) {
@@ -24,6 +24,7 @@ export const login = async (request: Request, response: Response) => {
     response .status(500).json({ error: "Error interno del servidor" });
  }
 }
+
 export const crearUsuario = async (request: Request, response: Response) => {
     const {username, password, tipo_usuario} = request.body;
     if (!username || !password || !tipo_usuario) {
@@ -31,7 +32,7 @@ export const crearUsuario = async (request: Request, response: Response) => {
     }
 
     try {
-        const existente = await usuario.findByPk(username);
+        const existente = await usuario.findOne({ where: { username } });
         if (existente) {
             return response.status(409).json({ error: "El usuario ya existe" });
         }
