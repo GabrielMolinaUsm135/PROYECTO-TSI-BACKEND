@@ -2,7 +2,6 @@ import { Request, Response } from "express";
 import usuario from "../models/usuario";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import { message } from "valibot";
 
 export const login = async (request: Request, response: Response) => {
  const { username, password } = request.body;
