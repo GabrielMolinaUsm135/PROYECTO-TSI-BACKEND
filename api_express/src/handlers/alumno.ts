@@ -5,14 +5,7 @@ import Alumno from "../models/alumno";
 export const ListarAlumnos = async (request: Request, response: Response) => {
     // response.send('placeholder');
     try {
-        const alumnos = await Alumno.findAll({
-            attributes: [
-                'rut_alumno',
-                'nombre_alumno',
-                'apellido_paterno',
-                'apellido_materno'
-            ]
-        });
+        const alumnos = await Alumno.findAll();
 
         response.json({ data: alumnos });
     } catch (error) {
