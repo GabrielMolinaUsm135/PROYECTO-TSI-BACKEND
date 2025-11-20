@@ -8,7 +8,7 @@ class Rol extends Model {
     @Column({ type: DataType.INTEGER, field: "id_rol" })
     declare id_rol: number;
 
-    @Column({ type: DataType.STRING(255), allowNull: true, field: "nombre_rol" })
+    @Column({ type: DataType.STRING(50), allowNull: true, field: "nombre_rol" })
     declare nombre_rol: string | null;
 
     @HasMany(() => Usuario, { foreignKey: "id_rol" })

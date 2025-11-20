@@ -6,12 +6,12 @@ import Insumo from "./insumo";
 class InstrumentoInsumo extends Model {
     @PrimaryKey
     @ForeignKey(() => Instrumento)
-    @Column({ type: DataType.STRING(255), field: "cod_instrumento" })
+    @Column({ type: DataType.STRING(8), field: "cod_instrumento" })
     declare cod_instrumento: string;
 
     @PrimaryKey
     @ForeignKey(() => Insumo)
-    @Column({ type: DataType.STRING(255), field: "cod_insumo" })
+    @Column({ type: DataType.STRING(8), field: "cod_insumo" })
     declare cod_insumo: string;
 
     @BelongsTo(() => Instrumento)

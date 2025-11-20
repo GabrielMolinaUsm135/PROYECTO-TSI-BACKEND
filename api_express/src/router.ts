@@ -6,25 +6,12 @@ import {
     CrearAlumno,
     ActualizarAlumnoPorRut,
     EliminarAlumnoPorRut,
-    ObtenerApoderadoDeAlumno,
-    ObtenerClasesDeAlumno,
-    ObtenerInstrumentosDeAlumno,
-    ObtenerNotasDeAlumno,
-    CrearNotaParaAlumno,
-    ActualizarNotaPorRutYFecha,
-    EliminarNotaPorRutYFecha,
-    ListarPrestamos,
-    ObtenerPrestamoPorId,
-    CrearPrestamoInstrumentos,
-    DevolverInstrumentoPorIdPrestamo,
-    CrearPrestamoInsumos,
-    DevolverInsumoPorIdPrestamo,
     ObtenerAlumnoPorNombre,
     ObtenerAlumnoPorNombreApellido,
     ObtenerAlumnoPorNombreApellidoPM,
     ObtenerAlumnoPorApellidoP
 } from "./handlers/alumno";
-import { crearUsuario, login } from "./handlers/usuarios";
+import { crearUsuario, ListarUsuarios, login } from "./handlers/usuarios";
 import { VerificarToken } from "./middleware/verificar";
 import {
     ListarRoles,
@@ -113,12 +100,13 @@ const router = Router()
 
 //Login :D
 
-//router.post('/login', login) //login usuario
+router.post('/login', login) //login usuario
 router.post('/user/crear', crearUsuario) //registro usuario
+router.get('/usuarios', ListarUsuarios); //listar usuarios
 
 
 //MiddLeware 
-//router.use(VerificarToken)
+router.use(VerificarToken)
 //endpoints
     //cada vez que se invoque la ruta /ruta se debe ejecutar el ejemploHandler
     //localhost:3000/api/ruta

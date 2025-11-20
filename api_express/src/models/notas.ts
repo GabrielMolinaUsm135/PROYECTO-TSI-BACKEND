@@ -15,7 +15,7 @@ class Notas extends Model {
     @Column({ type: DataType.DATE, allowNull: true, field: "fecha_evaluacion" })
     declare fecha_evaluacion: Date | null;
 
-    @Column({ type: DataType.STRING(255), allowNull: true, field: "nombre_evaluacion" })
+    @Column({ type: DataType.STRING(150), allowNull: true, field: "nombre_evaluacion" })
     declare nombre_evaluacion: string | null;
 
     @Column({ type: DataType.INTEGER, allowNull: true, field: "nota" })

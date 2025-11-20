@@ -11,9 +11,6 @@ class GrupoTeoria extends Model {
     @Column({ type: DataType.STRING(255), allowNull: true, field: "nombre_grupo" })
     declare nombre_grupo: string | null;
 
-    @Column({ type: DataType.STRING(255), allowNull: true, field: "nivel" })
-    declare nivel: string | null;
-
     @HasMany(() => Alumno, { foreignKey: "id_grupo_teoria" })
     declare alumnos?: Alumno[];
 }

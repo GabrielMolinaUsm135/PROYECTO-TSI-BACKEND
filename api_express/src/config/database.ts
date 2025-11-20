@@ -1,7 +1,5 @@
 import { Dialect } from "sequelize";
 import { Sequelize } from "sequelize-typescript";
-import Alumno from "../models/alumno";
-import Usuario from "../models/usuario";
 import dotenv from 'dotenv'
 dotenv.config()
 

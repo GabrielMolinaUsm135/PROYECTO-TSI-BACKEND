@@ -10,7 +10,7 @@ class Alergia extends Model {
     @Column({ type: DataType.INTEGER, field: "cod_alergia" })
     declare cod_alergia: number;
 
-    @Column({ type: DataType.STRING(255), allowNull: true, field: "nombre_alergia" })
+    @Column({ type: DataType.STRING(150), allowNull: true, field: "nombre_alergia" })
     declare nombre_alergia: string | null;
 
     @BelongsToMany(() => Alumno, () => AlumnoAlergia)

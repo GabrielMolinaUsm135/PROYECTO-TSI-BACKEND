@@ -7,16 +7,16 @@ class Apoderado extends Model {
     @Column({ type: DataType.INTEGER, field: "id_apoderado" })
     declare id_apoderado: number;
 
-    @Column({ type: DataType.STRING(255), allowNull: true, unique: true, field: "rut" })
+    @Column({ type: DataType.STRING(12), allowNull: true, unique: true, field: "rut" })
     declare rut: string | null;
 
-    @Column({ type: DataType.STRING(255), allowNull: true, field: "nombre" })
+    @Column({ type: DataType.STRING(50), allowNull: true, field: "nombre" })
     declare nombre: string | null;
 
-    @Column({ type: DataType.STRING(255), allowNull: true, field: "correo" })
+    @Column({ type: DataType.STRING(150), allowNull: true, field: "correo" })
     declare correo: string | null;
 
-    @Column({ type: DataType.STRING(255), allowNull: true, field: "telefono" })
+    @Column({ type: DataType.STRING(15), allowNull: true, field: "telefono" })
     declare telefono: string | null;
 }
 

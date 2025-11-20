@@ -5,11 +5,11 @@ import Usuario from "./usuario";
 @Table({ tableName: "prestamo_instrumento", timestamps: false })
 class PrestamoInstrumento extends Model {
     @PrimaryKey
-    @Column({ type: DataType.STRING(255), field: "cod_prestamo" })
+    @Column({ type: DataType.STRING(20), field: "cod_prestamo" })
     declare cod_prestamo: string;
 
     @ForeignKey(() => Instrumento)
-    @Column({ type: DataType.STRING(255), allowNull: true, field: "cod_instrumento" })
+    @Column({ type: DataType.STRING(8), allowNull: true, field: "cod_instrumento" })
     declare cod_instrumento: string | null;
 
     @ForeignKey(() => Usuario)
@@ -22,7 +22,7 @@ class PrestamoInstrumento extends Model {
     @Column({ type: DataType.DATE, allowNull: true, field: "fecha_devolucion" })
     declare fecha_devolucion: Date | null;
 
-    @Column({ type: DataType.STRING(255), allowNull: true, field: "estado" })
+    @Column({ type: DataType.STRING(20), allowNull: true, field: "estado" })
     declare estado: string | null;
 
     @BelongsTo(() => Instrumento)
