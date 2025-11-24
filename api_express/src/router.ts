@@ -6,6 +6,7 @@ import {
     CrearAlumno,
     ActualizarAlumnoPorRut,
     EliminarAlumnoPorRut,
+    EliminarAlumnoPorId,
     ObtenerAlumnoPorNombre,
     ObtenerAlumnoPorNombreApellido,
     ObtenerAlumnoPorNombreApellidoPM,
@@ -126,6 +127,7 @@ router.get('/alumno/buscar/aP/:apellidoP', ObtenerAlumnoPorApellidoP) //obtener 
 router.post('/alumno', CrearAlumno) //crear un alumno
 router.put('/alumno/:rut', ActualizarAlumnoPorRut) //actualizar un alumno por rut
 router.delete('/alumno/:rut', EliminarAlumnoPorRut) //eliminar un alumno por rut
+router.delete('/alumno/id/:id', EliminarAlumnoPorId) //eliminar alumno por id_alumno
 
 // Roles
 router.get('/roles', ListarRoles)

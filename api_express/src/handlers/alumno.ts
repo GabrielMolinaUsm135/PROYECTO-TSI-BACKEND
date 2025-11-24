@@ -22,8 +22,14 @@ export const ObtenerAlumnoPorRut = async (request: Request, response: Response) 
     const { rut } = request.params
     // response.json('Alumno por Rut: ' + rut)
 
-    const alumno = await Alumno.findByPk(rut)
-    response.json({data:alumno})
+    try {
+        const alumno = await Alumno.findOne({ where: { rut } });
+        if (!alumno) return response.status(404).json({ error: 'Alumno no encontrado' });
+        response.json({ data: alumno });
+    } catch (error) {
+        console.error(error);
+        response.status(500).json({ error: 'Error al obtener alumno por RUT' });
+    }
 };
 
 export const ObtenerAlumnoPorNombre = async (request: Request, response: Response) => {
@@ -32,7 +38,7 @@ export const ObtenerAlumnoPorNombre = async (request: Request, response: Respons
     try {
         const alumnos = await Alumno.findAll({
             where: {
-                nombre_alumno: nombre,
+                nombre: nombre,
             }
         });
         
@@ -51,7 +57,7 @@ export const ObtenerAlumnoPorNombreApellido = async (request: Request, response:
     try {
         const alumnos = await Alumno.findAll({
             where: {
-                nombre_alumno: nombre,
+                nombre: nombre,
                 apellido_paterno: apellido
             }
         });
@@ -92,7 +98,7 @@ export const ObtenerAlumnoPorNombreApellidoPM = async (request: Request, respons
     try {
         const alumnos = await Alumno.findAll({
             where: {
-                nombre_alumno: nombre,
+                nombre: nombre,
                 apellido_paterno: apellidoP,
                 apellido_materno: apellidoM
             }
@@ -124,7 +130,9 @@ export const CrearAlumno = async (request: Request, response: Response) => {
         correo,
         password,
         id_rol,
-        tipo_usuario
+        tipo_usuario,
+        // rut (now accepted and stored as a normal column)
+        rut
     } = request.body;
 
     const transaction = await db.transaction();
@@ -163,6 +171,7 @@ export const CrearAlumno = async (request: Request, response: Response) => {
         const alumnoData: any = {
             id_apoderado: id_apoderado ?? null,
             id_usuario: id_usuario,
+            rut: rut ?? null,
             nombre: nombre ?? null,
             apellido_paterno: apellido_paterno ?? null,
             apellido_materno: apellido_materno ?? null,
@@ -187,18 +196,80 @@ export const CrearAlumno = async (request: Request, response: Response) => {
 export const ActualizarAlumnoPorRut = async (request: Request, response: Response) => {
     // response.send('placeholder');
     const {rut} = request.params
-    const alumno = await Alumno.findByPk(rut)
-    await alumno.update(request.body)
-    await alumno.save()
-    response.json({data:alumno})
+    try {
+        const alumno = await Alumno.findOne({ where: { rut } });
+        if (!alumno) return response.status(404).json({ error: 'Alumno no encontrado' });
+        await alumno.update(request.body);
+        await alumno.save();
+        response.json({ data: alumno });
+    } catch (error) {
+        console.error(error);
+        response.status(500).json({ error: 'Error al actualizar alumno' });
+    }
 };
 
 export const EliminarAlumnoPorRut = async (request: Request, response: Response) => {
-        // response.send('placeholder');
-    const {rut} = request.params
-    const alumno = await Alumno.findByPk(rut)
-    await alumno.destroy()
-    response.json({data:'Alumno eliminado'})
+    const { rut } = request.params;
+    const transaction = await db.transaction();
+    try {
+        const alumno = await Alumno.findOne({ where: { rut }, transaction });
+        if (!alumno) {
+            await transaction.rollback();
+            return response.status(404).json({ error: 'Alumno no encontrado' });
+        }
+
+        const id_usuario = alumno.getDataValue('id_usuario');
+
+        await alumno.destroy({ transaction });
+
+        let usuarioEliminado = false;
+        if (id_usuario) {
+            const usu = await usuario.findByPk(id_usuario, { transaction });
+            if (usu) {
+                await usu.destroy({ transaction });
+                usuarioEliminado = true;
+            }
+        }
+
+        await transaction.commit();
+        response.json({ data: `Alumno eliminado${usuarioEliminado ? ' y usuario asociado eliminado' : ''}` });
+    } catch (error) {
+        await transaction.rollback();
+        console.error(error);
+        response.status(500).json({ error: 'Error al eliminar alumno' });
+    }
+};
+
+export const EliminarAlumnoPorId = async (request: Request, response: Response) => {
+    const { id } = request.params;
+    const transaction = await db.transaction();
+    try {
+        const alumno = await Alumno.findByPk(id, { transaction });
+        if (!alumno) {
+            await transaction.rollback();
+            return response.status(404).json({ error: 'Alumno no encontrado' });
+        }
+
+        const id_usuario = alumno.getDataValue('id_usuario');
+
+        await alumno.destroy({ transaction });
+
+        let usuarioEliminado = false;
+        if (id_usuario) {
+            const usu = await usuario.findByPk(id_usuario, { transaction });
+            if (usu) {
+                await usu.destroy({ transaction });
+                usuarioEliminado = true;
+            }
+        }
+
+        await transaction.commit();
+        response.json({ data: `Alumno eliminado${usuarioEliminado ? ' y usuario asociado eliminado' : ''}` });
+    } catch (error) {
+        await transaction.rollback();
+        console.error(error);
+        response.status(500).json({ error: 'Error al eliminar alumno por id' });
+    }
 };
 
 export const ObtenerApoderadoDeAlumno = async (request: Request, response: Response) => {

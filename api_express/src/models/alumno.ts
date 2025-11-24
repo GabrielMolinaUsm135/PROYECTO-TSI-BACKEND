@@ -1,4 +1,4 @@
-import { Table, Column, Model, DataType, PrimaryKey, AutoIncrement, ForeignKey, BelongsTo, HasMany } from "sequelize-typescript";
+import { Table, Column, Model, DataType, PrimaryKey, AutoIncrement, ForeignKey, BelongsTo, HasMany, AllowNull } from "sequelize-typescript";
 import Usuario from "./usuario";
 import Apoderado from "./apoderado";
 import GrupoTeoria from "./grupo_teoria";
@@ -55,6 +55,9 @@ class Alumno extends Model {
 
     @HasMany(() => Notas, { foreignKey: "id_alumno" })
     declare notas?: Notas[];
+
+    @Column({ type: DataType.STRING(10), allowNull: true, field: "rut" })
+    declare rut: string | null;
 
     // many-to-many with Alergia through alumno_alergia will be defined in allergy model if needed
 }
