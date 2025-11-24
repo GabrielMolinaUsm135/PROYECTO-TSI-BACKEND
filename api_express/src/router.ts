@@ -106,7 +106,7 @@ router.get('/usuarios', ListarUsuarios); //listar usuarios
 
 
 //MiddLeware 
-router.use(VerificarToken)
+//router.use(VerificarToken)
 //endpoints
     //cada vez que se invoque la ruta /ruta se debe ejecutar el ejemploHandler
     //localhost:3000/api/ruta
