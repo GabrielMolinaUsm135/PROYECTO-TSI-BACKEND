@@ -1,11 +1,14 @@
 import { Request, Response } from "express";
 import Alumno from "../models/alumno";
+import { Model } from "sequelize";
 
 //retorna un mensaje de ejemplo
 export const ListarAlumnos = async (request: Request, response: Response) => {
     // response.send('placeholder');
     try {
-        const alumnos = await Alumno.findAll();
+        const alumnos = await Alumno.findAll({
+            include: [{model: Alumno}]
+        });
 
         response.json({ data: alumnos });
     } catch (error) {

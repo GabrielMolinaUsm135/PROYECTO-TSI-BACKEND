@@ -27,19 +27,8 @@ export const login = async (request: Request, response: Response) => {
 
 
 export const crearUsuario = async (request: Request, response: Response) => {
-    
-    const {
-        correo,
-        password,
-        nombre,
-        apellido_paterno,
-        apellido_materno,
-        telefono,
-        direccion,
-        rut,
-        tipo_usuario,
-        id_rol
-    } = request.body;
+    // Only accept and store the fields defined in the Usuario model: correo, password, id_rol
+    const { correo, password, id_rol, tipo_usuario } = request.body;
 
     if (!correo || !password) {
         return response.status(400).json({ error: "Faltan datos: correo y/o password" });
@@ -51,44 +40,37 @@ export const crearUsuario = async (request: Request, response: Response) => {
             return response.status(409).json({ error: "El usuario ya existe" });
         }
 
-        
+        // Determine role id: prefer explicit id_rol, otherwise use tipo_usuario if numeric
         let roleId: number | null = null;
-        if (id_rol) {
+        if (id_rol !== undefined && id_rol !== null) {
             roleId = Number(id_rol);
-        } else if (tipo_usuario && !isNaN(Number(tipo_usuario))) {
+        } else if (tipo_usuario !== undefined && !isNaN(Number(tipo_usuario))) {
             roleId = Number(tipo_usuario);
         }
 
-        
+        // Optional: verify the role exists if provided
+        if (roleId) {
+            const rolExist = await Rol.findByPk(roleId);
+            if (!rolExist) return response.status(400).json({ error: "id_rol no válido" });
+        }
+
         const hashed = await bcrypt.hash(password, 10);
 
         const nuevoUser = await usuario.create({
             correo,
             password: hashed,
-            nombre: nombre ?? null,
-            apellido_paterno: apellido_paterno ?? null,
-            apellido_materno: apellido_materno ?? null,
-            telefono: telefono ?? null,
-            direccion: direccion ?? null,
-            rut: rut ?? null,
             id_rol: roleId,
         });
 
-        
         const plain = nuevoUser.get({ plain: true }) as any;
         delete plain.password;
 
-        
+        // Add rol name to response if available, keep id_rol numeric
         if (roleId) {
-            try {
-                const role = await Rol.findByPk(roleId);
-                if (role) {
-                    // replace numeric id with role string
-                    plain.id_rol = role.getDataValue("nombre_rol");
-                }
-            } catch (err) {
-                console.warn("No se pudo resolver nombre de rol:", err);
-            }
+            const rolObj = await Rol.findByPk(roleId);
+            plain.rol = rolObj ? rolObj.getDataValue('nombre_rol') : null;
+        } else {
+            plain.rol = null;
         }
 
         response.status(201).json({ message: "Usuario Creado Correctamente", data: plain });
