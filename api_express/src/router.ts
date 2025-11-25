@@ -96,6 +96,7 @@ import {
     CrearAlumnoAlergia,
     EliminarAlumnoAlergia
 } from "./handlers/alumno_alergia";
+import { ListarClases } from "./handlers/clase";
 
 const router = Router()
 
@@ -149,6 +150,7 @@ router.get('/profesores/:id', ObtenerProfesorPorId)
 router.post('/profesores', CrearProfesor)
 router.put('/profesores/:id', ActualizarProfesorPorId)
 router.delete('/profesores/:id', EliminarProfesorPorId)
+router.get('/clases',ListarClases)
 
 // Notas
 router.get('/notas', ListarNotas)

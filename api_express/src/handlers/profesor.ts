@@ -4,11 +4,45 @@ import usuario from "../models/usuario";
 import Rol from "../models/rol";
 import bcrypt from "bcrypt";
 import db from "../config/database";
+import Clase from "../models/clase";
 
 export const ListarProfesores = async (request: Request, response: Response) => {
   try {
-    const items = await Profesor.findAll();
-    response.json({ data: items });
+    // Devuelve solo profesores cuyo usuario asociado tiene id_rol = 2
+    const items = await Profesor.findAll({
+      include: [
+        {
+          model: usuario,
+          where: { id_rol: 2 },
+          required: true,
+          attributes: { exclude: ['password'] },
+        },
+      ],
+      attributes: { exclude: ['asignatura'] },
+    });
+
+    // Convertir a objetos planos y para cada profesor buscar la clase
+    // cuyo id_usuario coincide y usar su asignatura (si existe)
+    const plain = items.map((it: any) => it.toJSON());
+
+    const resultados = await Promise.all(
+      plain.map(async (prof: any) => {
+        try {
+          if (prof.id_usuario) {
+            const clase = await Clase.findOne({ where: { id_usuario: prof.id_usuario } });
+            if (clase && clase.getDataValue('asignatura')) {
+              prof.asignatura = clase.getDataValue('asignatura');
+            }
+          }
+        } catch (e) {
+          // no bloquear la respuesta por errores al buscar la clase
+          console.error('Error buscando clase para id_usuario', prof.id_usuario, e.message);
+        }
+        return prof;
+      })
+    );
+
+    response.json({ data: resultados });
   } catch (error) {
     console.error(error);
     response.status(500).json({ error: "Error al listar profesores " + error.message });
