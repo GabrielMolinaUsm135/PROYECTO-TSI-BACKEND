@@ -1,11 +1,11 @@
 import { Table, Column, Model, DataType, PrimaryKey, AutoIncrement, ForeignKey, BelongsTo } from "sequelize-typescript";
 import Usuario from "./usuario";
 
-@Table({ tableName: "profesor", timestamps: false })
+@Table({ tableName: "usuario", timestamps: false })
 class Profesor extends Model {
     @PrimaryKey
     @AutoIncrement
-    @Column({ type: DataType.INTEGER, field: "id_profesor" })
+    @Column({ type: DataType.INTEGER, field: "id_usuario" })
     declare id_profesor: number;
 
     @ForeignKey(() => Usuario)
@@ -27,8 +27,8 @@ class Profesor extends Model {
     @Column({ type: DataType.STRING(150), allowNull: true, field: "direccion" })
     declare direccion: string | null;
 
-    @Column({ type: DataType.STRING(50), allowNull: true, field: "asignatura" })
-    declare asignatura: string | null;
+    //@Column({ type: DataType.STRING(50), allowNull: true, field: "asignatura" })
+    //declare asignatura: string | null;
 
     @BelongsTo(() => Usuario)
     declare usuario?: Usuario;

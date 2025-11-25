@@ -7,7 +7,7 @@ export const ListarApoderados = async (request: Request, response: Response) => 
     response.json({ data: items });
   } catch (error) {
     console.error(error);
-    response.status(500).json({ error: "Error al listar apoderados" });
+    response.status(500).json({ error: "Error al listar apoderados " + error.mensagge });
   }
 };
 

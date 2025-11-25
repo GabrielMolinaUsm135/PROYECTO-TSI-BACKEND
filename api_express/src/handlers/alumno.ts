@@ -14,7 +14,7 @@ export const ListarAlumnos = async (request: Request, response: Response) => {
         response.json({ data: alumnos });
     } catch (error) {
         console.error(error);
-        response.status(500).json({ error: 'Error al listar alumnos' });
+        response.status(500).json({ error: 'Error al listar alumnos ' + error.message });
     }
 };
 

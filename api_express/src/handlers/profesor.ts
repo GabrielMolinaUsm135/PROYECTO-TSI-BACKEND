@@ -11,7 +11,7 @@ export const ListarProfesores = async (request: Request, response: Response) => 
     response.json({ data: items });
   } catch (error) {
     console.error(error);
-    response.status(500).json({ error: "Error al listar profesores" });
+    response.status(500).json({ error: "Error al listar profesores " + error.message });
   }
 };
 
