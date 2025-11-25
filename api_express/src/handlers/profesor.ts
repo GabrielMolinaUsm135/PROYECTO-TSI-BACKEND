@@ -70,6 +70,7 @@ export const CrearProfesor = async (request: Request, response: Response) => {
     telefono,
     direccion,
     asignatura,
+    rut,
     // optional user fields
     correo,
     password,
@@ -117,6 +118,7 @@ export const CrearProfesor = async (request: Request, response: Response) => {
       telefono: telefono ?? null,
       direccion: direccion ?? null,
       asignatura: asignatura ?? null,
+      rut: rut ?? null
     };
 
     const nuevo = await Profesor.create(profesorData, { transaction });
