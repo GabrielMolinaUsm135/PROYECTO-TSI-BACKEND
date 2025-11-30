@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Nov 25, 2025 at 08:49 PM
+-- Generation Time: Nov 30, 2025 at 09:42 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -175,7 +175,7 @@ CREATE TABLE `instrumento` (
   `cod_instrumento` varchar(8) NOT NULL,
   `nombre_instrumento` varchar(100) DEFAULT NULL,
   `modelo_instrumento` varchar(50) DEFAULT NULL,
-  `tamaño` varchar(20) DEFAULT NULL,
+  `tamano` varchar(20) DEFAULT NULL,
   `observacion` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -183,8 +183,8 @@ CREATE TABLE `instrumento` (
 -- Dumping data for table `instrumento`
 --
 
-INSERT INTO `instrumento` (`cod_instrumento`, `nombre_instrumento`, `modelo_instrumento`, `tamaño`, `observacion`) VALUES
-('CELL001', 'Cello', 'Yamaha C2', '1/2', 'Rayón superficial'),
+INSERT INTO `instrumento` (`cod_instrumento`, `nombre_instrumento`, `modelo_instrumento`, `tamano`, `observacion`) VALUES
+('CELL001', 'Cello', 'Yamaha C2', '1/2', 'Buen estado'),
 ('CELL002', 'Cello', 'Stentor Student II', '3/4', 'Sin observaciones'),
 ('CELL003', 'Cello', 'Cremona SC-130', '4/4', 'Golpe leve en el costado'),
 ('CLAR001', 'Clarinete', 'Yamaha YCL-255', 'Estándar', 'Llaves lubricadas recientemente'),
@@ -206,10 +206,7 @@ INSERT INTO `instrumento` (`cod_instrumento`, `nombre_instrumento`, `modelo_inst
 ('VIOL001', 'Violín', 'Yamaha V3', '1/2', 'Leve desgaste en la tapa'),
 ('VIOL002', 'Violín', 'Stentor Student I', '3/4', 'Buen estado'),
 ('VIOL003', 'Violín', 'Cremona SV-130', '4/4', 'Cuerdas nuevas'),
-('VIOL004', 'Violín', 'Hofner AS-160', '1/4', 'Puente renovado'),
-('VIOL005', 'Violín', 'Fenix FV44', '4/4', 'Incluye arco nuevo'),
-('VIOL006', 'Violín', 'Yamaha V5SA', '3/4', 'Incluye funda'),
-('VIOL007', 'Violín', 'Stentor Conservatoire', '4/4', 'Montado recientemente');
+('VIOL004', 'Violín', 'Hofner AS-160', '1/4', 'Puente renovado');
 
 -- --------------------------------------------------------
 
@@ -239,7 +236,7 @@ CREATE TABLE `insumo` (
 --
 
 INSERT INTO `insumo` (`cod_insumo`, `nombre_insumo`, `observacion`) VALUES
-('ACCE001', 'Atril musical', 'Altura regulable'),
+('ACCE001', 'Atril musical', 'Altura regulable directora'),
 ('ACCE002', 'Atril musical', 'Tornillo flojo'),
 ('ACCE003', 'Afinador digital', 'Incluye batería'),
 ('ARCO001', 'Arco para violín', 'Fibra de carbono'),
@@ -332,9 +329,7 @@ CREATE TABLE `profesor` (
 --
 
 INSERT INTO `profesor` (`id_profesor`, `id_usuario`, `nombre`, `apellido_paterno`, `apellido_materno`, `telefono`, `direccion`, `asignatura`, `rut`) VALUES
-(1, 8, 'Laura', 'Soto', 'Reyes', '987654321', 'Av Siempre Viva 1', 'Profesora de Viola', NULL),
-(2, 9, 'Mickaella', 'Santamaria', 'Silva', '56987452007', 'exfundo santamaria parcela 5b', 'Profesora de cello', '111111111'),
-(3, 17, 'Profesor', 'a', 'a', '56987452007', 'exfundo santamaria parcela 5b', 'asdasd', '13123');
+(2, 9, 'Mickaella', 'Santamaria', 'Silva', '56987452007', 'exfundo santamaria parcela 5b', 'Profesora de cello', '111111111');
 
 -- --------------------------------------------------------
 
@@ -377,10 +372,8 @@ INSERT INTO `usuario` (`id_usuario`, `correo`, `password`, `id_rol`) VALUES
 (1, 'usuario@example.com', '$2b$10$PlORfnoy2BcIaU/y3LdcMOoCM7nQtCgyaJIq3aVPiPRfNQOaLD5oK', 2),
 (2, 'root@gmail.com', '$2b$10$c9q7eaYOzIUft2.i6BqVnOxfDhgoAWUXnZRPg9fpjVlX7uQNgB192', 1),
 (5, 'admin1@musart.com', '$2b$10$lj0ImKtBDMC7wdaJN5ie/.j8xMdW1DDGFE6fMHBjWzEw50HcnNbRK', 3),
-(8, 'laura@example.com', '$2b$10$yyo9ov3m2gLmoMgMMZYNqePsTRB2Z4sM6b1BIr4QMaonoWBNNDgjC', 2),
 (9, 'ejemplo@usm.cl', '$2b$10$PQfbZERdQNqXN0uQMfDPhOEHFiPdQOSsCEPSKIFaGMAMdUeLQxSEi', 2),
-(13, 'mickaella@musart.com', '$2b$10$pF.cx4BDacYumPE.e4271O70Qj7hC7xpBtcUAiWk4a4u3qlcNtfkG', 3),
-(17, 'profesor1@gmail.com', '$2b$10$JGXcyfjZzqY9fXvmMWukG.KfsYPjyu656p5tMiLaEePK67HEoEVFa', 2);
+(13, 'mickaella@musart.com', '$2b$10$pF.cx4BDacYumPE.e4271O70Qj7hC7xpBtcUAiWk4a4u3qlcNtfkG', 3);
 
 --
 -- Indexes for dumped tables
