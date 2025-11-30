@@ -16,7 +16,7 @@ class Instrumento extends Model {
     declare modelo_instrumento: string | null;
 
     // field name contains a special character in the SQL (tamaño). Map to 'tamano' property
-    @Column({ type: DataType.STRING(20), allowNull: true, field: "tamaño" })
+    @Column({ type: DataType.STRING(20), allowNull: true, field: "tamano" })
     declare tamano: string | null;
 
     @Column({ type: DataType.STRING(255), allowNull: true, field: "observacion" })
