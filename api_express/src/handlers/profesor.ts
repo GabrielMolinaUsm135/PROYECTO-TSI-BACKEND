@@ -146,16 +146,35 @@ export const ActualizarProfesorPorId = async (request: Request, response: Respon
 };
 
 export const EliminarProfesorPorId = async (request: Request, response: Response) => {
-  const { id } = request.params;
-  try {
-    const item = await Profesor.findByPk(id);
-    if (!item) return response.status(404).json({ error: "Profesor no encontrado" });
-    await item.destroy();
-    response.json({ data: "Profesor eliminado" });
-  } catch (error) {
-    console.error(error);
-    response.status(500).json({ error: "Error al eliminar profesor" });
-  }
-};
+    const { id } = request.params;
+    const transaction = await db.transaction();
+    try {
+        const profesor = await Profesor.findByPk(id, { transaction });
+        if (!profesor) {
+            await transaction.rollback();
+            return response.status(404).json({ error: 'Profesor no encontrado' });
+        }
 
+        const id_usuario = profesor.getDataValue('id_usuario');
+
+        await profesor.destroy({ transaction });
+
+        let usuarioEliminado = false;
+        if (id_usuario) {
+            const usu = await usuario.findByPk(id_usuario, { transaction });
+            if (usu) {
+                await usu.destroy({ transaction });
+                usuarioEliminado = true;
+            }
+        }
+
+        await transaction.commit();
+        response.json({ data: `Profesor eliminado${usuarioEliminado ? ' y usuario asociado eliminado' : ''}` });
+    } catch (error) {
+        await transaction.rollback();
+        console.error(error);
+        response.status(500).json({ error: 'Error al eliminar profesor por id' });
+    }
+};
 export default {};
+
