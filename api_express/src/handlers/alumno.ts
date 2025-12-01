@@ -11,7 +11,22 @@ export const ListarAlumnos = async (request: Request, response: Response) => {
     try {
         const alumnos = await Alumno.findAll();
 
-        response.json({ data: alumnos });
+        const plain = alumnos.map((a: any) => a.toJSON());
+        const resultados = await Promise.all(
+            plain.map(async (al: any) => {
+                try {
+                    if (al.id_usuario) {
+                        const usu = await usuario.findByPk(al.id_usuario);
+                        if (usu) al.correo = usu.getDataValue('correo');
+                    }
+                } catch (e) {
+                    console.error('Error al obtener correo para alumno', al.id_usuario, e.message);
+                }
+                return al;
+            })
+        );
+
+        response.json({ data: resultados });
     } catch (error) {
         console.error(error);
         response.status(500).json({ error: 'Error al listar alumnos ' + error.message });
@@ -25,7 +40,18 @@ export const ObtenerAlumnoPorRut = async (request: Request, response: Response) 
     try {
         const alumno = await Alumno.findOne({ where: { rut } });
         if (!alumno) return response.status(404).json({ error: 'Alumno no encontrado' });
-        response.json({ data: alumno });
+
+        const data: any = alumno.toJSON();
+        try {
+            if (data.id_usuario) {
+                const usu = await usuario.findByPk(data.id_usuario);
+                if (usu) data.correo = usu.getDataValue('correo');
+            }
+        } catch (e) {
+            console.error('Error al obtener correo del usuario para alumno', e.message);
+        }
+
+        response.json({ data });
     } catch (error) {
         console.error(error);
         response.status(500).json({ error: 'Error al obtener alumno por RUT' });
@@ -185,7 +211,18 @@ export const CrearAlumno = async (request: Request, response: Response) => {
         const nuevoAlumno = await Alumno.create(alumnoData, { transaction });
         await transaction.commit();
 
-        response.status(201).json({ data: nuevoAlumno });
+        // Añadir correo del usuario asociado a la respuesta si existe
+        const responseData: any = nuevoAlumno.toJSON();
+        try {
+            if (id_usuario) {
+                const usu = await usuario.findByPk(id_usuario);
+                if (usu) responseData.correo = usu.getDataValue('correo');
+            }
+        } catch (e) {
+            console.error('Error al obtener correo del usuario para respuesta CrearAlumno', e.message);
+        }
+
+        response.status(201).json({ data: responseData });
     } catch (error) {
         await transaction.rollback();
         console.error(error);
@@ -196,13 +233,51 @@ export const CrearAlumno = async (request: Request, response: Response) => {
 export const ActualizarAlumnoPorRut = async (request: Request, response: Response) => {
     // response.send('placeholder');
     const {rut} = request.params
+    const transaction = await db.transaction();
     try {
-        const alumno = await Alumno.findOne({ where: { rut } });
-        if (!alumno) return response.status(404).json({ error: 'Alumno no encontrado' });
-        await alumno.update(request.body);
-        await alumno.save();
-        response.json({ data: alumno });
+        const alumno = await Alumno.findOne({ where: { rut }, transaction });
+        if (!alumno) {
+            await transaction.rollback();
+            return response.status(404).json({ error: 'Alumno no encontrado' });
+        }
+
+        // Actualizar alumno dentro de la transacción
+        const updatedAlumno = await alumno.update(request.body, { transaction });
+
+        // Si en el body viene `correo` y existe `id_usuario`, actualizar el usuario asociado
+        const newCorreo = request.body?.correo;
+        const idUsuario = updatedAlumno.getDataValue('id_usuario');
+        if (newCorreo && idUsuario) {
+            // Verificar que el correo no esté en uso por otro usuario
+            const existente = await usuario.findOne({ where: { correo: newCorreo }, transaction });
+            if (existente && existente.getDataValue('id_usuario') !== idUsuario) {
+                await transaction.rollback();
+                return response.status(409).json({ error: 'El correo ya está en uso por otro usuario' });
+            }
+
+            const user = await usuario.findByPk(idUsuario, { transaction });
+            if (user) {
+                await user.update({ correo: newCorreo }, { transaction });
+            }
+        }
+
+        await transaction.commit();
+
+        // Preparar y devolver la respuesta incluyendo el correo actualizado si existe
+        const refreshed = await Alumno.findOne({ where: { rut } });
+        const responseData: any = refreshed ? refreshed.toJSON() : updatedAlumno.toJSON();
+        try {
+            if (idUsuario) {
+                const userFinal = await usuario.findByPk(idUsuario);
+                if (userFinal) responseData.correo = userFinal.getDataValue('correo');
+            }
+        } catch (e) {
+            console.error('Error al obtener correo del usuario después de actualizar', e.message);
+        }
+
+        response.json({ data: responseData });
     } catch (error) {
+        await transaction.rollback();
         console.error(error);
         response.status(500).json({ error: 'Error al actualizar alumno' });
     }
