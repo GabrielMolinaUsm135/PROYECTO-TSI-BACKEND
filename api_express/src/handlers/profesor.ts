@@ -54,7 +54,18 @@ export const ObtenerProfesorPorId = async (request: Request, response: Response)
   try {
     const item = await Profesor.findByPk(id);
     if (!item) return response.status(404).json({ error: "Profesor no encontrado" });
-    response.json({ data: item });
+
+    const data: any = item.toJSON();
+    try {
+      if (data.id_usuario) {
+        const user = await usuario.findByPk(data.id_usuario);
+        if (user) data.correo = user.getDataValue('correo');
+      }
+    } catch (e) {
+      console.error('Error al obtener correo del usuario para profesor', e.message);
+    }
+
+    response.json({ data });
   } catch (error) {
     console.error(error);
     response.status(500).json({ error: "Error al obtener profesor" });
@@ -118,12 +129,26 @@ export const CrearProfesor = async (request: Request, response: Response) => {
       telefono: telefono ?? null,
       direccion: direccion ?? null,
       asignatura: asignatura ?? null,
-      rut: rut ?? null
+      rut: rut ?? null,
     };
 
     const nuevo = await Profesor.create(profesorData, { transaction });
     await transaction.commit();
-    response.status(201).json({ data: nuevo });
+
+    // Preparar respuesta incluyendo el correo del usuario asociado (si existe)
+    let responseData: any = nuevo.toJSON();
+    try {
+      if (id_usuario) {
+        const user = await usuario.findByPk(id_usuario);
+        if (user) {
+          responseData.correo = user.getDataValue('correo');
+        }
+      }
+    } catch (e) {
+      console.error('Error al obtener correo del usuario para la respuesta', e.message);
+    }
+
+    response.status(201).json({ data: responseData });
   } catch (error) {
     await transaction.rollback();
     console.error(error);
@@ -133,13 +158,46 @@ export const CrearProfesor = async (request: Request, response: Response) => {
 
 export const ActualizarProfesorPorId = async (request: Request, response: Response) => {
   const { id } = request.params;
+  const transaction = await db.transaction();
   try {
-    const item = await Profesor.findByPk(id);
-    if (!item) return response.status(404).json({ error: "Profesor no encontrado" });
-    await item.update(request.body);
-    await item.save();
-    response.json({ data: item });
+    const item = await Profesor.findByPk(id, { transaction });
+    if (!item) {
+      await transaction.rollback();
+      return response.status(404).json({ error: "Profesor no encontrado" });
+    }
+    const updatedProfesor = await item.update(request.body, { transaction });
+    const newCorreo = request.body?.correo;
+    const idUsuario = updatedProfesor.getDataValue('id_usuario');
+    if (newCorreo && idUsuario) {
+      const existente = await usuario.findOne({ where: { correo: newCorreo }, transaction });
+      if (existente && existente.getDataValue('id_usuario') !== idUsuario) {
+        await transaction.rollback();
+        return response.status(409).json({ error: 'El correo ya está en uso por otro usuario' });
+      }
+
+      const user = await usuario.findByPk(idUsuario, { transaction });
+      if (user) {
+        await user.update({ correo: newCorreo }, { transaction });
+      }
+    }
+
+    await transaction.commit();
+
+    // Preparar respuesta incluyendo correo actualizado si existe
+    const refreshed = await Profesor.findByPk(id);
+    const responseData: any = refreshed ? refreshed.toJSON() : updatedProfesor.toJSON();
+    try {
+      if (idUsuario) {
+        const userFinal = await usuario.findByPk(idUsuario);
+        if (userFinal) responseData.correo = userFinal.getDataValue('correo');
+      }
+    } catch (e) {
+      console.error('Error al obtener correo del usuario después de actualizar', e.message);
+    }
+
+    response.json({ data: responseData });
   } catch (error) {
+    await transaction.rollback();
     console.error(error);
     response.status(500).json({ error: "Error al actualizar profesor" });
   }
