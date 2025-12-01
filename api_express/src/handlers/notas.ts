@@ -23,6 +23,20 @@ export const ObtenerNotaPorId = async (request: Request, response: Response) => 
   }
 };
 
+export const ObtenerNotasPorId = async (request: Request, response: Response) => {
+  // Aquí `id` corresponde a `id_alumno` — devolver todas las notas del alumno
+  const { id } = request.params;
+  try {
+    const items = await Notas.findAll({ where: { id_alumno: id } });
+    if (!items || items.length === 0)
+      return response.status(404).json({ error: "No se encontraron notas para el alumno" });
+    response.json({ data: items });
+  } catch (error) {
+    console.error(error);
+    response.status(500).json({ error: "Error al obtener notas" });
+  }
+};
+
 export const CrearNota = async (request: Request, response: Response) => {
   try {
     const nuevo = await Notas.create(request.body);

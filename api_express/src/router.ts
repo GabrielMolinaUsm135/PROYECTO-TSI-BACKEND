@@ -40,7 +40,8 @@ import {
     ObtenerNotaPorId,
     CrearNota,
     ActualizarNotaPorId,
-    EliminarNotaPorId
+    EliminarNotaPorId,
+    ObtenerNotasPorId
 } from "./handlers/notas";
 import {
     ListarAlergias,
@@ -158,6 +159,7 @@ router.get('/notas/:id', ObtenerNotaPorId)
 router.post('/notas', CrearNota)
 router.put('/notas/:id', ActualizarNotaPorId)
 router.delete('/notas/:id', EliminarNotaPorId)
+router.get('/Tnotas/:id', ObtenerNotasPorId) // Obtener todas las notas de un alumno por su id_alumno
 
 // Alergias
 router.get('/alergias', ListarAlergias)
