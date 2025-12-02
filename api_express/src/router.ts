@@ -24,6 +24,7 @@ import {
 import {
     ListarApoderados,
     ObtenerApoderadoPorId,
+    ListarRutApoderados,
     CrearApoderado,
     ActualizarApoderadoPorId,
     EliminarApoderadoPorId
@@ -96,6 +97,7 @@ import {
 import {
     ListarAlumnoAlergia,
     ObtenerAlumnoAlergia,
+    ListarAlergiasPorAlumno,
     CrearAlumnoAlergia,
     EliminarAlumnoAlergia
 } from "./handlers/alumno_alergia";
@@ -142,6 +144,7 @@ router.delete('/roles/:id', EliminarRolPorId)
 
 // Apoderados
 router.get('/apoderados', ListarApoderados)
+router.get('/apoderados/ruts', ListarRutApoderados)
 router.get('/apoderados/:id', ObtenerApoderadoPorId)
 router.post('/apoderados', CrearApoderado)
 router.put('/apoderados/:id', ActualizarApoderadoPorId)
@@ -215,6 +218,7 @@ router.delete('/prestamos_insumo/:id', EliminarPrestamoInsumoPorId)
 
 // Alumno-Alergia (join)
 router.get('/alumno_alergia', ListarAlumnoAlergia)
+router.get('/alumno_alergia/alumno/:id_alumno', ListarAlergiasPorAlumno)
 router.get('/alumno_alergia/:cod_alergia/:id_alumno', ObtenerAlumnoAlergia)
 router.post('/alumno_alergia', CrearAlumnoAlergia)
 router.delete('/alumno_alergia/:cod_alergia/:id_alumno', EliminarAlumnoAlergia)

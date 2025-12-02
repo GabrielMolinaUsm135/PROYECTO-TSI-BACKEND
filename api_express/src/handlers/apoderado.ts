@@ -60,4 +60,15 @@ export const EliminarApoderadoPorId = async (request: Request, response: Respons
   }
 };
 
+export const ListarRutApoderados = async (request: Request, response: Response) => {
+  try {
+    const items = await Apoderado.findAll({ attributes: ["rut"], raw: true });
+    const ruts = items.map((i: any) => i.rut);
+    response.json({ data: ruts });
+  } catch (error) {
+    console.error(error);
+    response.status(500).json({ error: "Error al listar ruts de apoderados" });
+  }
+};
+
 export default {};

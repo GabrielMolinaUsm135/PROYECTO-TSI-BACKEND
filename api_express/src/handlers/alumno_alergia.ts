@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import AlumnoAlergia from "../models/alumno_alergia";
+import Alergia from "../models/alergia";
 
 export const ListarAlumnoAlergia = async (request: Request, response: Response) => {
   try {
@@ -43,6 +44,18 @@ export const EliminarAlumnoAlergia = async (request: Request, response: Response
   } catch (error) {
     console.error(error);
     response.status(500).json({ error: "Error al eliminar registro" });
+  }
+};
+
+export const ListarAlergiasPorAlumno = async (request: Request, response: Response) => {
+  const { id_alumno } = request.params;
+  try {
+    const items = await AlumnoAlergia.findAll({ where: { id_alumno }, include: [Alergia] });
+    const alergias = items.map(i => i.alergia).filter(Boolean);
+    response.json({ data: alergias });
+  } catch (error) {
+    console.error(error);
+    response.status(500).json({ error: "Error al listar alergias del alumno" });
   }
 };
 
