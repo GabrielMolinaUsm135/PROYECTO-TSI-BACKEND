@@ -71,4 +71,16 @@ export const ListarRutApoderados = async (request: Request, response: Response) 
   }
 };
 
+export const ObtenerApoderadoPorRut = async (request: Request, response: Response) => {
+  const { rut } = request.params;
+  try {
+    const item = await Apoderado.findOne({ where: { rut } });
+    if (!item) return response.status(404).json({ error: "Apoderado no encontrado" });
+    response.json({ data: item });
+  } catch (error) {
+    console.error(error);
+    response.status(500).json({ error: "Error al obtener apoderado por rut" });
+  }
+};
+
 export default {};

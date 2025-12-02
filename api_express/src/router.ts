@@ -25,6 +25,7 @@ import {
     ListarApoderados,
     ObtenerApoderadoPorId,
     ListarRutApoderados,
+    ObtenerApoderadoPorRut,
     CrearApoderado,
     ActualizarApoderadoPorId,
     EliminarApoderadoPorId
@@ -145,6 +146,7 @@ router.delete('/roles/:id', EliminarRolPorId)
 // Apoderados
 router.get('/apoderados', ListarApoderados)
 router.get('/apoderados/ruts', ListarRutApoderados)
+router.get('/apoderados/rut/:rut', ObtenerApoderadoPorRut)
 router.get('/apoderados/:id', ObtenerApoderadoPorId)
 router.post('/apoderados', CrearApoderado)
 router.put('/apoderados/:id', ActualizarApoderadoPorId)
