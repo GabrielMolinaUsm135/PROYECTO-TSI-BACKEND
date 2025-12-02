@@ -74,6 +74,8 @@ import {
 import {
     ListarInstrumentoInsumo,
     ObtenerInstrumentoInsumo,
+    ListarInstrumentoInsumoPorInstrumento,
+    ListarInstrumentoInsumoPorInsumo,
     CrearInstrumentoInsumo,
     EliminarInstrumentoInsumo
 } from "./handlers/instrumento_insumo";
@@ -191,6 +193,8 @@ router.delete('/insumos/:id', EliminarInsumoPorId)
 
 // Instrumento-Insumo (join)
 router.get('/instrumento_insumo', ListarInstrumentoInsumo)
+router.get('/instrumento_insumo/:cod_instrumento', ListarInstrumentoInsumoPorInstrumento)
+router.get('/instrumento_insumo/insumo/:cod_insumo', ListarInstrumentoInsumoPorInsumo)
 router.get('/instrumento_insumo/:cod_instrumento/:cod_insumo', ObtenerInstrumentoInsumo)
 router.post('/instrumento_insumo', CrearInstrumentoInsumo)
 router.delete('/instrumento_insumo/:cod_instrumento/:cod_insumo', EliminarInstrumentoInsumo)

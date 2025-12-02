@@ -11,6 +11,28 @@ export const ListarInstrumentoInsumo = async (request: Request, response: Respon
   }
 };
 
+export const ListarInstrumentoInsumoPorInstrumento = async (request: Request, response: Response) => {
+  const { cod_instrumento } = request.params;
+  try {
+    const items = await InstrumentoInsumo.findAll({ where: { cod_instrumento } });
+    response.json({ data: items });
+  } catch (error) {
+    console.error(error);
+    response.status(500).json({ error: "Error al listar registros por instrumento" });
+  }
+};
+
+export const ListarInstrumentoInsumoPorInsumo = async (request: Request, response: Response) => {
+  const { cod_insumo } = request.params;
+  try {
+    const items = await InstrumentoInsumo.findAll({ where: { cod_insumo } });
+    response.json({ data: items });
+  } catch (error) {
+    console.error(error);
+    response.status(500).json({ error: "Error al listar registros por insumo" });
+  }
+};
+
 export const ObtenerInstrumentoInsumo = async (request: Request, response: Response) => {
   const { cod_instrumento, cod_insumo } = request.params;
   try {
