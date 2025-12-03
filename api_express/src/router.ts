@@ -10,7 +10,8 @@ import {
     ObtenerAlumnoPorNombre,
     ObtenerAlumnoPorNombreApellido,
     ObtenerAlumnoPorNombreApellidoPM,
-    ObtenerAlumnoPorApellidoP
+    ObtenerAlumnoPorApellidoP,
+    ObtenerAlumnoPorId
 } from "./handlers/alumno";
 import { ActualizarUsuarioPorId, crearUsuario, ListarUsuarios, login, ObtenerUsuarioPorId } from "./handlers/usuarios";
 import { VerificarToken } from "./middleware/verificar";
@@ -136,6 +137,7 @@ router.post('/alumno', CrearAlumno) //crear un alumno
 router.put('/alumno/:rut', ActualizarAlumnoPorRut) //actualizar un alumno por rut
 router.delete('/alumno/:rut', EliminarAlumnoPorRut) //eliminar un alumno por rut
 router.delete('/alumno/id/:id', EliminarAlumnoPorId) //eliminar alumno por id_alumno
+router.get('/alumno/id/:id', ObtenerAlumnoPorId) //obtener un alumno por id
 
 // Roles
 router.get('/roles', ListarRoles)

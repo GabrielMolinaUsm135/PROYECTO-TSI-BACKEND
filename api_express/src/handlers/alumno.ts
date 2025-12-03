@@ -57,6 +57,27 @@ export const ObtenerAlumnoPorRut = async (request: Request, response: Response) 
         response.status(500).json({ error: 'Error al obtener alumno por RUT' });
     }
 };
+export const ObtenerAlumnoPorId = async (request: Request, response: Response) => {
+  const { id } = request.params;
+  try {
+    const item = await Alumno.findByPk(id);
+    if (!item) return response.status(404).json({ error: "Alumno no encontrado" });
+    const data: any = item.toJSON();
+    try {
+      if (data.id_usuario) {
+        const user = await usuario.findByPk(data.id_usuario);
+        if (user) data.correo = user.getDataValue('correo');
+      }
+    } catch (e) {
+      console.error('Error al obtener correo del usuario para alumno', e.message);
+    }
+
+    response.json({ data });
+  } catch (error) {
+    console.error(error);
+    response.status(500).json({ error: "Error al obtener alumno" });
+  }
+};
 
 export const ObtenerAlumnoPorNombre = async (request: Request, response: Response) => {
     const { nombre } = request.params;
