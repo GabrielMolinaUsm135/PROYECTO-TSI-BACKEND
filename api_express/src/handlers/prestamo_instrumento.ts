@@ -1,6 +1,8 @@
 import { Request, Response } from "express";
 import PrestamoInstrumento from "../models/prestamo_instrumento";
 import PrestamoInsumo from "../models/prestamo_insumo";
+import Instrumento from "../models/instrumento";
+import Insumo from "../models/insumo";
 
 export const ListarPrestamosInstrumento = async (request: Request, response: Response) => {
   try {
@@ -94,6 +96,19 @@ export const InstrumentoEstaEnUso = async (request: Request, response: Response)
   } catch (error) {
     console.error(error);
     response.status(500).json({ error: "Error al verificar estado de uso del instrumento" });
+  }
+};
+
+export const ListarPrestamosPorUsuario = async (request: Request, response: Response) => {
+  const { id_usuario } = request.params;
+  try {
+    const prestamosInstrumento = await PrestamoInstrumento.findAll({ where: { id_usuario }, include: [Instrumento] });
+    const prestamosInsumo = await PrestamoInsumo.findAll({ where: { id_usuario }, include: [Insumo] });
+
+    response.json({ data: { prestamos_instrumento: prestamosInstrumento, prestamos_insumo: prestamosInsumo } });
+  } catch (error) {
+    console.error(error);
+    response.status(500).json({ error: "Error al listar prestamos por usuario" });
   }
 };
 

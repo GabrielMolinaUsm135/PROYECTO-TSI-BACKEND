@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import { Op } from "sequelize";
 import GrupoTeoria from "../models/grupo_teoria";
 
 export const ListarGrupos = async (request: Request, response: Response) => {
@@ -57,6 +58,18 @@ export const EliminarGrupoPorId = async (request: Request, response: Response) =
   } catch (error) {
     console.error(error);
     response.status(500).json({ error: "Error al eliminar grupo" });
+  }
+};
+
+export const ObtenerGrupoPorNombre = async (request: Request, response: Response) => {
+  const { nombre } = request.params;
+  try {
+    // Exact match on the DB column `nombre_grupo` to avoid dialect-specific operators (e.g. ILIKE)
+    const items = await GrupoTeoria.findAll({ where: { nombre_grupo: nombre } });
+    response.json({ data: items });
+  } catch (error) {
+    console.error(error);
+    response.status(500).json({ error: "Error al buscar grupo por nombre" });
   }
 };
 

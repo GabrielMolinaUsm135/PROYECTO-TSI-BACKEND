@@ -30,8 +30,10 @@ import {
     ObtenerApoderadoPorRut,
     CrearApoderado,
     ActualizarApoderadoPorId,
-    EliminarApoderadoPorId
+    EliminarApoderadoPorId,
+    ApoderadoTieneHijo
 } from "./handlers/apoderado";
+import { ListarAlumnosPorApoderado } from "./handlers/apoderado";
 import {
     ListarProfesores,
     ObtenerProfesorPorId,
@@ -57,6 +59,7 @@ import {
 import {
     ListarGrupos,
     ObtenerGrupoPorId,
+    ObtenerGrupoPorNombre,
     CrearGrupo,
     ActualizarGrupoPorId,
     EliminarGrupoPorId
@@ -91,6 +94,7 @@ import {
     ListarCodigosPrestamosInstrumento,
     ListarCodigosPrestamos,
     InstrumentoEstaEnUso,
+    ListarPrestamosPorUsuario,
     CrearPrestamoInstrumento,
     ActualizarPrestamoInstrumentoPorId,
     EliminarPrestamoInstrumentoPorId
@@ -159,6 +163,8 @@ router.get('/apoderados', ListarApoderados)
 router.get('/apoderados/ruts', ListarRutApoderados)
 router.get('/apoderados/rut/:rut', ObtenerApoderadoPorRut)
 router.get('/apoderados/:id', ObtenerApoderadoPorId)
+router.get('/apoderados/:id/tiene-hijo', ApoderadoTieneHijo)
+router.get('/apoderados/:id/alumnos', ListarAlumnosPorApoderado)
 router.post('/apoderados', CrearApoderado)
 router.put('/apoderados/:id', ActualizarApoderadoPorId)
 router.delete('/apoderados/:id', EliminarApoderadoPorId)
@@ -188,6 +194,7 @@ router.delete('/alergias/:id', EliminarAlergiaPorId)
 
 // Grupos teoria
 router.get('/grupos', ListarGrupos)
+router.get('/grupos/nombre/:nombre', ObtenerGrupoPorNombre)
 router.get('/grupos/:id', ObtenerGrupoPorId)
 router.post('/grupos', CrearGrupo)
 router.put('/grupos/:id', ActualizarGrupoPorId)
@@ -211,8 +218,6 @@ router.delete('/insumos/:id', EliminarInsumoPorId)
 router.get('/instrumento_insumo', ListarInstrumentoInsumo)
 router.get('/instrumento_insumo/:cod_instrumento', ListarInstrumentoInsumoPorInstrumento)
 router.get('/instrumento_insumo/insumo/:cod_insumo', ListarInstrumentoInsumoPorInsumo)
-router.get('/instrumento_insumo/insumos-con-instrumento', ListarInsumosConInstrumento)
-router.get('/instrumento_insumo/codigos-insumos', ListarCodigosInsumosConInstrumento)
 router.get('/instrumento_insumo/:cod_instrumento/:cod_insumo', ObtenerInstrumentoInsumo)
 router.post('/instrumento_insumo', CrearInstrumentoInsumo)
 router.delete('/instrumento_insumo/:cod_instrumento/:cod_insumo', EliminarInstrumentoInsumo)
@@ -220,6 +225,7 @@ router.delete('/instrumento_insumo/:cod_instrumento/:cod_insumo', EliminarInstru
 // Prestamos instrumento
 router.get('/prestamos_instrumento', ListarPrestamosInstrumento)
 router.get('/prestamos_instrumento/ocupado/:cod_instrumento', InstrumentoEstaEnUso)
+router.get('/prestamos/usuario/:id_usuario', ListarPrestamosPorUsuario)
 router.get('/prestamos_instrumento/:id', ObtenerPrestamoInstrumentoPorId)
 router.get('/prestamos_instrumento/codigos', ListarCodigosPrestamosInstrumento)
 router.get('/prestamos/codigos', ListarCodigosPrestamos)

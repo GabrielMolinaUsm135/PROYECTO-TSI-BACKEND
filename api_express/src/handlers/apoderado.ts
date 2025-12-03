@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import Apoderado from "../models/apoderado";
+import Alumno from "../models/alumno";
 
 export const ListarApoderados = async (request: Request, response: Response) => {
   try {
@@ -80,6 +81,34 @@ export const ObtenerApoderadoPorRut = async (request: Request, response: Respons
   } catch (error) {
     console.error(error);
     response.status(500).json({ error: "Error al obtener apoderado por rut" });
+  }
+};
+
+export const ApoderadoTieneHijo = async (request: Request, response: Response) => {
+  const { id } = request.params;
+  try {
+    const apoderado = await Apoderado.findByPk(id);
+    if (!apoderado) return response.status(404).json({ error: "Apoderado no encontrado" });
+
+    const count = await Alumno.count({ where: { id_apoderado: id } });
+    response.json({ hasKid: count > 0, count });
+  } catch (error) {
+    console.error(error);
+    response.status(500).json({ error: "Error al verificar si apoderado tiene hijos" });
+  }
+};
+
+export const ListarAlumnosPorApoderado = async (request: Request, response: Response) => {
+  const { id } = request.params;
+  try {
+    const apoderado = await Apoderado.findByPk(id);
+    if (!apoderado) return response.status(404).json({ error: "Apoderado no encontrado" });
+
+    const alumnos = await Alumno.findAll({ where: { id_apoderado: id } });
+    response.json({ data: alumnos });
+  } catch (error) {
+    console.error(error);
+    response.status(500).json({ error: "Error al listar alumnos del apoderado" });
   }
 };
 
