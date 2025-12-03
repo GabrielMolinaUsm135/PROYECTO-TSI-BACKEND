@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Nov 30, 2025 at 09:42 PM
+-- Generation Time: Dec 03, 2025 at 10:58 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -101,7 +101,10 @@ CREATE TABLE `alumno` (
 --
 
 INSERT INTO `alumno` (`id_alumno`, `id_apoderado`, `id_usuario`, `nombre`, `apellido_paterno`, `apellido_materno`, `telefono`, `direccion`, `diagnostico_ne`, `id_grupo_teoria`, `fecha_ingreso`, `rut`) VALUES
-(6, NULL, 13, 'Mickaella', 'Santamaria', 'Silva', '56987452007', 'exfundo santamaria parcela 5b', 'Autismo severo', 1, '2025-11-24', '23590657-0');
+(6, 3, 13, 'Mickaella', 'Santamaria', 'Silva', '56987452007', 'exfundo santamaria parcela 5b', 'Autismo severo', 1, '2025-11-19', '23590657-0'),
+(8, 11, 19, 'Gabriel ', 'Molina', 'Pérez', '+56987452007', 'no se', 'SIDA', 3, '2025-11-28', '21931566-k'),
+(9, 11, 22, 'Sebastian', 'Molina', 'Pérez', '+56987452007', 'Parcela 4a2c', 'TDAH', 3, '2025-11-30', '23049857-1'),
+(11, 2, 25, 'Mauricio Alejandro', 'Molina', 'Yañez', '+56999653328', 'Parcela 4a2c', '', 1, '2025-12-24', '12626462-3');
 
 -- --------------------------------------------------------
 
@@ -113,6 +116,15 @@ CREATE TABLE `alumno_alergia` (
   `cod_alergia` int(11) NOT NULL,
   `id_alumno` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `alumno_alergia`
+--
+
+INSERT INTO `alumno_alergia` (`cod_alergia`, `id_alumno`) VALUES
+(13, 6),
+(14, 6),
+(15, 6);
 
 -- --------------------------------------------------------
 
@@ -141,8 +153,7 @@ INSERT INTO `apoderado` (`id_apoderado`, `rut`, `nombre`, `correo`, `telefono`) 
 (6, '17.111.222-3', 'Luis Hernández', 'luis.hernandez@example.com', '+56966554433'),
 (7, '13.222.444-6', 'Claudia Fuentes', 'claudia.fuentes@example.com', '+56965432178'),
 (8, '14.789.321-8', 'Diego Rojas', 'diego.rojas@example.com', '+56978965412'),
-(9, '11.543.987-0', 'Verónica Díaz', 'veronica.diaz@example.com', '+56974455667'),
-(10, '20.123.456-7', 'Francisco Paredes', 'francisco.paredes@example.com', '+56970011223');
+(11, '14.498.931-8', 'Patricia Pérez Molina', 'patricia@gmail.com', '+569190827301');
 
 -- --------------------------------------------------------
 
@@ -204,9 +215,7 @@ INSERT INTO `instrumento` (`cod_instrumento`, `nombre_instrumento`, `modelo_inst
 ('TUBA001', 'Tuba', 'Jupiter JTU700', 'Estándar', 'Rayas menores'),
 ('TUBA002', 'Tuba', 'Yamaha YBB-105', 'Estándar', 'Sonido brillante'),
 ('VIOL001', 'Violín', 'Yamaha V3', '1/2', 'Leve desgaste en la tapa'),
-('VIOL002', 'Violín', 'Stentor Student I', '3/4', 'Buen estado'),
-('VIOL003', 'Violín', 'Cremona SV-130', '4/4', 'Cuerdas nuevas'),
-('VIOL004', 'Violín', 'Hofner AS-160', '1/4', 'Puente renovado');
+('VIOL002', 'Violín', 'Stentor Student I', '3/4', 'Buen estado');
 
 -- --------------------------------------------------------
 
@@ -218,6 +227,14 @@ CREATE TABLE `instrumento_insumo` (
   `cod_instrumento` varchar(8) NOT NULL,
   `cod_insumo` varchar(8) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `instrumento_insumo`
+--
+
+INSERT INTO `instrumento_insumo` (`cod_instrumento`, `cod_insumo`) VALUES
+('CELL001', 'ACCE001'),
+('CELL001', 'ACCE003');
 
 -- --------------------------------------------------------
 
@@ -256,11 +273,8 @@ INSERT INTO `insumo` (`cod_insumo`, `nombre_insumo`, `observacion`) VALUES
 ('LIMB002', 'Kit de limpieza para flauta', 'Incluye varilla'),
 ('LUBR001', 'Lubricante para llaves', 'Uso general'),
 ('LUBR002', 'Grasa para corcho', 'Tubo pequeño'),
-('PART001', 'Partitura: Método Suzuki 1', 'Buen estado'),
 ('PART002', 'Partitura: Método Suzuki 2', 'Usado, marcadas algunas notas'),
-('PART003', 'Partitura: Estudios de Clarinete', 'Nuevo'),
-('SORD001', 'Sordina para trompeta', 'Aluminio'),
-('SORD002', 'Sordina para trompeta', 'Copa ajustable');
+('PART003', 'Partitura: Estudios de Clarinete', 'Nuevo');
 
 -- --------------------------------------------------------
 
@@ -283,13 +297,21 @@ CREATE TABLE `notas` (
 --
 
 CREATE TABLE `prestamo_instrumento` (
-  `cod_prestamo` varchar(20) NOT NULL,
+  `cod_prestamo` int(20) NOT NULL,
   `cod_instrumento` varchar(8) DEFAULT NULL,
   `id_usuario` int(11) DEFAULT NULL,
   `fecha_prestamo` date DEFAULT NULL,
   `fecha_devolucion` date DEFAULT NULL,
   `estado` varchar(20) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `prestamo_instrumento`
+--
+
+INSERT INTO `prestamo_instrumento` (`cod_prestamo`, `cod_instrumento`, `id_usuario`, `fecha_prestamo`, `fecha_devolucion`, `estado`) VALUES
+(1, 'CELL001', 19, '2025-12-03', '2025-12-04', 'pendiente'),
+(3, 'CELL002', 22, '2025-12-03', '2025-12-04', 'devuelto');
 
 -- --------------------------------------------------------
 
@@ -298,13 +320,20 @@ CREATE TABLE `prestamo_instrumento` (
 --
 
 CREATE TABLE `prestamo_insumo` (
-  `cod_prestamo` varchar(20) NOT NULL,
+  `cod_prestamo` int(20) NOT NULL,
   `cod_insumo` varchar(8) DEFAULT NULL,
   `id_usuario` int(11) DEFAULT NULL,
   `fecha_prestamo` date DEFAULT NULL,
   `fecha_devolucion` date DEFAULT NULL,
   `estado` varchar(20) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `prestamo_insumo`
+--
+
+INSERT INTO `prestamo_insumo` (`cod_prestamo`, `cod_insumo`, `id_usuario`, `fecha_prestamo`, `fecha_devolucion`, `estado`) VALUES
+(2, 'ACCE002', 19, '2025-12-03', '2025-12-04', 'devuelto');
 
 -- --------------------------------------------------------
 
@@ -329,7 +358,8 @@ CREATE TABLE `profesor` (
 --
 
 INSERT INTO `profesor` (`id_profesor`, `id_usuario`, `nombre`, `apellido_paterno`, `apellido_materno`, `telefono`, `direccion`, `asignatura`, `rut`) VALUES
-(2, 9, 'Mickaella', 'Santamaria', 'Silva', '56987452007', 'exfundo santamaria parcela 5b', 'Profesora de cello', '111111111');
+(2, 9, 'Mickaella', 'Santamaria', 'Silva', '56987452007', 'exfundo santamaria parcela 5b', 'Profesora de cello', '111111111'),
+(4, 24, 'Gabriel', 'Molina', 'Pérez', '56987452007', 'Direccion', 'Profesor de viola', '21931566-k');
 
 -- --------------------------------------------------------
 
@@ -373,7 +403,11 @@ INSERT INTO `usuario` (`id_usuario`, `correo`, `password`, `id_rol`) VALUES
 (2, 'root@gmail.com', '$2b$10$c9q7eaYOzIUft2.i6BqVnOxfDhgoAWUXnZRPg9fpjVlX7uQNgB192', 1),
 (5, 'admin1@musart.com', '$2b$10$lj0ImKtBDMC7wdaJN5ie/.j8xMdW1DDGFE6fMHBjWzEw50HcnNbRK', 3),
 (9, 'ejemplo@usm.cl', '$2b$10$PQfbZERdQNqXN0uQMfDPhOEHFiPdQOSsCEPSKIFaGMAMdUeLQxSEi', 2),
-(13, 'mickaella@musart.com', '$2b$10$pF.cx4BDacYumPE.e4271O70Qj7hC7xpBtcUAiWk4a4u3qlcNtfkG', 3);
+(13, 'mickaella@musart.com', '$2b$10$pF.cx4BDacYumPE.e4271O70Qj7hC7xpBtcUAiWk4a4u3qlcNtfkG', 3),
+(19, 'test@gmail.com', '$2b$10$GUrLZs0FvpNl9T0FwnTK/O6bUCCUx6Ji6xPh87Or7QTZFgMmLpRMK', 3),
+(22, 'sebastian@gmail.com', '$2b$10$6KiFNYLkA3EPKRgb.LYDoO/A2.O4NmPei9QG8Dp9hHb62nVzdJ4Ym', 3),
+(24, 'gabriel@profesor.com', '$2b$10$QSPQ/I9BMt23Ax3mcGM49uv7kYA/pDAIu7q5GHKB3kcuvEPlzGDNy', 2),
+(25, 'maury.molina.yanez@gmail.com', '$2b$10$jIZlQ/YFl9QgBQiloZou/eZ8pbuag7ypGpR2WzMi71i/ek3k02sLO', 3);
 
 --
 -- Indexes for dumped tables
@@ -485,19 +519,19 @@ ALTER TABLE `usuario`
 -- AUTO_INCREMENT for table `alergia`
 --
 ALTER TABLE `alergia`
-  MODIFY `cod_alergia` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
+  MODIFY `cod_alergia` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
 
 --
 -- AUTO_INCREMENT for table `alumno`
 --
 ALTER TABLE `alumno`
-  MODIFY `id_alumno` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id_alumno` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `apoderado`
 --
 ALTER TABLE `apoderado`
-  MODIFY `id_apoderado` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id_apoderado` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `grupo_teoria`
@@ -509,13 +543,13 @@ ALTER TABLE `grupo_teoria`
 -- AUTO_INCREMENT for table `notas`
 --
 ALTER TABLE `notas`
-  MODIFY `id_nota` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_nota` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `profesor`
 --
 ALTER TABLE `profesor`
-  MODIFY `id_profesor` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id_profesor` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `rol`
@@ -527,7 +561,7 @@ ALTER TABLE `rol`
 -- AUTO_INCREMENT for table `usuario`
 --
 ALTER TABLE `usuario`
-  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
 
 --
 -- Constraints for dumped tables
