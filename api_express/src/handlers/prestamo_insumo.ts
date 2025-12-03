@@ -60,4 +60,16 @@ export const EliminarPrestamoInsumoPorId = async (request: Request, response: Re
   }
 };
 
+export const InsumoEstaEnUso = async (request: Request, response: Response) => {
+  const { cod_insumo } = request.params;
+  try {
+    const pendientes = await PrestamoInsumo.count({ where: { cod_insumo, estado: "pendiente" } });
+    const enUso = pendientes > 0;
+    response.json({ data: { cod_insumo, enUso, pendientes } });
+  } catch (error) {
+    console.error(error);
+    response.status(500).json({ error: "Error al verificar estado de uso del insumo" });
+  }
+};
+
 export default {};

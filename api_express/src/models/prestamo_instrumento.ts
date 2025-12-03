@@ -5,8 +5,8 @@ import Usuario from "./usuario";
 @Table({ tableName: "prestamo_instrumento", timestamps: false })
 class PrestamoInstrumento extends Model {
     @PrimaryKey
-    @Column({ type: DataType.STRING(20), field: "cod_prestamo" })
-    declare cod_prestamo: string;
+    @Column({ type: DataType.INTEGER, field: "cod_prestamo" })
+    declare cod_prestamo: number;
 
     @ForeignKey(() => Instrumento)
     @Column({ type: DataType.STRING(8), allowNull: true, field: "cod_instrumento" })

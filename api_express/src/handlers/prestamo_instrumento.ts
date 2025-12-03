@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import PrestamoInstrumento from "../models/prestamo_instrumento";
+import PrestamoInsumo from "../models/prestamo_insumo";
 
 export const ListarPrestamosInstrumento = async (request: Request, response: Response) => {
   try {
@@ -57,6 +58,42 @@ export const EliminarPrestamoInstrumentoPorId = async (request: Request, respons
   } catch (error) {
     console.error(error);
     response.status(500).json({ error: "Error al eliminar préstamo" });
+  }
+};
+
+export const ListarCodigosPrestamosInstrumento = async (request: Request, response: Response) => {
+  try {
+    const items = await PrestamoInstrumento.findAll({ attributes: ["cod_prestamo"], raw: true });
+    const codigos = items.map((i: any) => i.cod_prestamo);
+    response.json({ data: codigos });
+  } catch (error) {
+    console.error(error);
+    response.status(500).json({ error: "Error al listar codigos de prestamos instrumento" });
+  }
+};
+
+export const ListarCodigosPrestamos = async (request: Request, response: Response) => {
+  try {
+    const instr = await PrestamoInstrumento.findAll({ attributes: ["cod_prestamo"], raw: true });
+    const insu = await PrestamoInsumo.findAll({ attributes: ["cod_prestamo"], raw: true });
+    const prestamos_instrumento = instr.map((i: any) => i.cod_prestamo);
+    const prestamos_insumo = insu.map((i: any) => i.cod_prestamo);
+    response.json({ data: { prestamos_instrumento, prestamos_insumo } });
+  } catch (error) {
+    console.error(error);
+    response.status(500).json({ error: "Error al listar codigos de prestamos" });
+  }
+};
+
+export const InstrumentoEstaEnUso = async (request: Request, response: Response) => {
+  const { cod_instrumento } = request.params;
+  try {
+    const pendientes = await PrestamoInstrumento.count({ where: { cod_instrumento, estado: "pendiente" } });
+    const enUso = pendientes > 0;
+    response.json({ data: { cod_instrumento, enUso, pendientes } });
+  } catch (error) {
+    console.error(error);
+    response.status(500).json({ error: "Error al verificar estado de uso del instrumento" });
   }
 };
 

@@ -372,6 +372,29 @@ export const ObtenerApoderadoDeAlumno = async (request: Request, response: Respo
     response.send('placeholder');
 };
 
+export const ObtenerAlumnoPorUsuarioId = async (request: Request, response: Response) => {
+    const { id_usuario } = request.params;
+    try {
+        const alumno = await Alumno.findOne({ where: { id_usuario } });
+        if (!alumno) return response.status(404).json({ error: 'Alumno no encontrado' });
+
+        const data: any = alumno.toJSON();
+        try {
+            if (data.id_usuario) {
+                const usu = await usuario.findByPk(data.id_usuario);
+                if (usu) data.correo = usu.getDataValue('correo');
+            }
+        } catch (e) {
+            console.error('Error al obtener correo del usuario para alumno', e.message);
+        }
+
+        response.json({ data });
+    } catch (error) {
+        console.error(error);
+        response.status(500).json({ error: 'Error al obtener alumno por id_usuario' });
+    }
+};
+
 export const ObtenerClasesDeAlumno = async (request: Request, response: Response) => {
     response.send('placeholder');
 };

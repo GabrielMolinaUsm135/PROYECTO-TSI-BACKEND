@@ -3,6 +3,7 @@ import { ejemploHandler, ejemploHandlerById } from "./handlers/ejemplo";
 import {
     ListarAlumnos,
     ObtenerAlumnoPorRut,
+    ObtenerAlumnoPorUsuarioId,
     CrearAlumno,
     ActualizarAlumnoPorRut,
     EliminarAlumnoPorRut,
@@ -79,12 +80,17 @@ import {
     ObtenerInstrumentoInsumo,
     ListarInstrumentoInsumoPorInstrumento,
     ListarInstrumentoInsumoPorInsumo,
+    ListarInsumosConInstrumento,
+    ListarCodigosInsumosConInstrumento,
     CrearInstrumentoInsumo,
     EliminarInstrumentoInsumo
 } from "./handlers/instrumento_insumo";
 import {
     ListarPrestamosInstrumento,
     ObtenerPrestamoInstrumentoPorId,
+    ListarCodigosPrestamosInstrumento,
+    ListarCodigosPrestamos,
+    InstrumentoEstaEnUso,
     CrearPrestamoInstrumento,
     ActualizarPrestamoInstrumentoPorId,
     EliminarPrestamoInstrumentoPorId
@@ -92,6 +98,7 @@ import {
 import {
     ListarPrestamosInsumo,
     ObtenerPrestamoInsumoPorId,
+    InsumoEstaEnUso,
     CrearPrestamoInsumo,
     ActualizarPrestamoInsumoPorId,
     EliminarPrestamoInsumoPorId
@@ -138,6 +145,7 @@ router.put('/alumno/:rut', ActualizarAlumnoPorRut) //actualizar un alumno por ru
 router.delete('/alumno/:rut', EliminarAlumnoPorRut) //eliminar un alumno por rut
 router.delete('/alumno/id/:id', EliminarAlumnoPorId) //eliminar alumno por id_alumno
 router.get('/alumno/id/:id', ObtenerAlumnoPorId) //obtener un alumno por id
+router.get('/alumno/usuario/:id_usuario', ObtenerAlumnoPorUsuarioId) //obtener alumno por id_usuario
 
 // Roles
 router.get('/roles', ListarRoles)
@@ -203,19 +211,25 @@ router.delete('/insumos/:id', EliminarInsumoPorId)
 router.get('/instrumento_insumo', ListarInstrumentoInsumo)
 router.get('/instrumento_insumo/:cod_instrumento', ListarInstrumentoInsumoPorInstrumento)
 router.get('/instrumento_insumo/insumo/:cod_insumo', ListarInstrumentoInsumoPorInsumo)
+router.get('/instrumento_insumo/insumos-con-instrumento', ListarInsumosConInstrumento)
+router.get('/instrumento_insumo/codigos-insumos', ListarCodigosInsumosConInstrumento)
 router.get('/instrumento_insumo/:cod_instrumento/:cod_insumo', ObtenerInstrumentoInsumo)
 router.post('/instrumento_insumo', CrearInstrumentoInsumo)
 router.delete('/instrumento_insumo/:cod_instrumento/:cod_insumo', EliminarInstrumentoInsumo)
 
 // Prestamos instrumento
 router.get('/prestamos_instrumento', ListarPrestamosInstrumento)
+router.get('/prestamos_instrumento/ocupado/:cod_instrumento', InstrumentoEstaEnUso)
 router.get('/prestamos_instrumento/:id', ObtenerPrestamoInstrumentoPorId)
+router.get('/prestamos_instrumento/codigos', ListarCodigosPrestamosInstrumento)
+router.get('/prestamos/codigos', ListarCodigosPrestamos)
 router.post('/prestamos_instrumento', CrearPrestamoInstrumento)
 router.put('/prestamos_instrumento/:id', ActualizarPrestamoInstrumentoPorId)
 router.delete('/prestamos_instrumento/:id', EliminarPrestamoInstrumentoPorId)
 
 // Prestamos insumo
 router.get('/prestamos_insumo', ListarPrestamosInsumo)
+router.get('/prestamos_insumo/ocupado/:cod_insumo', InsumoEstaEnUso)
 router.get('/prestamos_insumo/:id', ObtenerPrestamoInsumoPorId)
 router.post('/prestamos_insumo', CrearPrestamoInsumo)
 router.put('/prestamos_insumo/:id', ActualizarPrestamoInsumoPorId)
