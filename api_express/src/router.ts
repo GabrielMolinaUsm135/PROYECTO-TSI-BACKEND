@@ -12,7 +12,7 @@ import {
     ObtenerAlumnoPorNombreApellidoPM,
     ObtenerAlumnoPorApellidoP
 } from "./handlers/alumno";
-import { crearUsuario, ListarUsuarios, login } from "./handlers/usuarios";
+import { ActualizarUsuarioPorId, crearUsuario, ListarUsuarios, login, ObtenerUsuarioPorId } from "./handlers/usuarios";
 import { VerificarToken } from "./middleware/verificar";
 import {
     ListarRoles,
@@ -111,7 +111,8 @@ const router = Router()
 router.post('/login', login) //login usuario
 router.post('/user/crear', crearUsuario) //registro usuario
 router.get('/usuarios', ListarUsuarios); //listar usuarios
-
+router.get('/usuarios/:id', ObtenerUsuarioPorId); //obtener usuario por id
+router.put('/usuarios/:id', ActualizarUsuarioPorId); //actualizar usuario por id
 
 //MiddLeware 
 //router.use(VerificarToken)

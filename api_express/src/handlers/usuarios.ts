@@ -110,3 +110,43 @@ export const ListarUsuarios = async (request: Request, response: Response) => {
     }
 }
 
+export const ObtenerUsuarioPorId = async (request: Request, response: Response) => {
+  const { id } = request.params;
+  try {
+    const item = await usuario.findByPk(id);
+    if (!item) return response.status(404).json({ error: "Usuario no encontrado" });
+
+    const data: any = item.toJSON();
+    try {
+      if (data.id_usuario) {
+        const user = await usuario.findByPk(data.id_usuario);
+        if (user) data.correo = user.getDataValue('correo');
+      }
+    } catch (e) {
+      console.error('Error al obtener correo del usuario', e.message);
+    }
+
+    response.json({ data });
+  } catch (error) {
+    console.error(error);
+    response.status(500).json({ error: "Error al obtener usuario" });
+  }
+};
+
+export const ActualizarUsuarioPorId = async (request: Request, response: Response) => {
+    const { id } = request.params;
+    try {
+        // Forzar que `id` sea numérico para buscar por la PK `id_usuario`.
+        const idNum = Number(id);
+        if (isNaN(idNum)) return response.status(400).json({ error: 'El id de usuario debe ser numérico' });
+
+        const item = await usuario.findByPk(idNum);
+        if (!item) return response.status(404).json({ error: "Usuario no encontrado" });
+        await item.update(request.body);
+        await item.save();
+        response.json({ data: item });
+    } catch (error) {
+        console.error(error);
+        response.status(500).json({ error: "Error al actualizar usuario" });
+    }
+};
