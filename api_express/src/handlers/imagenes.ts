@@ -18,7 +18,7 @@ export const Listarimagenes = async (request: Request, response: Response) => {
 export const EliminarImagenporId = async (request: Request, response: Response) => {
   const { id } = request.params;
   try {
-    const item = await imagenes.findByPk(id);
+    const item = await imagenes.findOne({ where: { id_usuario: String(id) } });
     if (!item) return response.status(404).json({ error: "Imagen no encontrada" });
     await item.destroy();
     response.json({ data: "Imagen eliminada" });
@@ -31,7 +31,7 @@ export const EliminarImagenporId = async (request: Request, response: Response) 
 export const ObtenerimagenPorId = async (request: Request, response: Response) => {
   const { id } = request.params;
   try {
-    const item = await imagenes.findByPk(id);
+    const item = await imagenes.findOne({ where: { id_usuario: String(id) } });
     if (!item) return response.status(404).json({ error: "Imagen no encontrada" });
     const data: any = item.toJSON();
     // Convertimos el buffer a base64 para que sea fácil de consumir desde el frontend
