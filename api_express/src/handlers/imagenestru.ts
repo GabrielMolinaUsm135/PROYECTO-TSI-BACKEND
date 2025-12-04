@@ -40,8 +40,8 @@ export const ObtenerimagenTruPorCod = async (request: Request, response: Respons
 export const añadirimagenTru = async (request: Request, response: Response) => {
   try {
     // Esperamos un body JSON con { id_usuario, imagenBase64 }
-    const { cod_instrumento, imagenTru } = request.body as any;
-    if (!imagenTru) return response.status(400).json({ error: 'Se requiere imagenBase64 en el body' });
+    const { cod_instrumento, imagentr } = request.body as any;
+    if (!imagentr) return response.status(400).json({ error: 'Se requiere imagenBase64 en el body' });
 
     // Validar usuario si se pasó id_usuario
     if (cod_instrumento) {
@@ -54,8 +54,8 @@ export const añadirimagenTru = async (request: Request, response: Response) => 
     }
 
     // Si imagenBase64 viene con data URI, eliminar el prefijo
-    const matches = String(imagenTru).match(/^data:([a-zA-Z0-9+/.-]+);base64,(.*)$/);
-    const b64 = matches ? matches[2] : imagenTru;
+    const matches = String(imagentr).match(/^data:([a-zA-Z0-9+/.-]+);base64,(.*)$/);
+    const b64 = matches ? matches[2] : imagentr;
 
     const buffer = Buffer.from(b64, 'base64');
 
