@@ -115,6 +115,7 @@ import {
     EliminarAlumnoAlergia
 } from "./handlers/alumno_alergia";
 import { ListarClases } from "./handlers/clase";
+import { añadirimagen, Listarimagenes, ObtenerimagenPorId } from "./handlers/imagenes";
 
 const router = Router()
 
@@ -247,4 +248,8 @@ router.get('/alumno_alergia/alumno/:id_alumno', ListarAlergiasPorAlumno)
 router.get('/alumno_alergia/:cod_alergia/:id_alumno', ObtenerAlumnoAlergia)
 router.post('/alumno_alergia', CrearAlumnoAlergia)
 router.delete('/alumno_alergia/:cod_alergia/:id_alumno', EliminarAlumnoAlergia)
+// imagenes
+router.get('/imagenes', Listarimagenes);
+router.get('/imagenes/:id', ObtenerimagenPorId);
+router.post('/imagenes', añadirimagen);
 export default router
