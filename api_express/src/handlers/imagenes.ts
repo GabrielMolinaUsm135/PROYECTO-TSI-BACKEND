@@ -15,6 +15,19 @@ export const Listarimagenes = async (request: Request, response: Response) => {
     }
 };
 
+export const EliminarImagenporId = async (request: Request, response: Response) => {
+  const { id } = request.params;
+  try {
+    const item = await imagenes.findByPk(id);
+    if (!item) return response.status(404).json({ error: "Imagen no encontrada" });
+    await item.destroy();
+    response.json({ data: "Imagen eliminada" });
+  } catch (error) {
+    console.error(error);
+    response.status(500).json({ error: "Error al eliminar imagen" });
+  }
+};
+
 export const ObtenerimagenPorId = async (request: Request, response: Response) => {
   const { id } = request.params;
   try {

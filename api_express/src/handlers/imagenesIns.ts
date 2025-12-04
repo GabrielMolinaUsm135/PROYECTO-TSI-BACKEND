@@ -15,6 +15,20 @@ export const ListarimagenesIns = async (request: Request, response: Response) =>
     }
 };
 
+export const EliminarImagenInsPorId = async (request: Request, response: Response) => {
+  const { cod_insumo } = request.params;
+  try {
+    // Buscar por la columna cod_insumo (no por PK id_image)
+    const item = await imagenes_insumos.findOne({ where: { cod_insumo: String(cod_insumo) } });
+    if (!item) return response.status(404).json({ error: `Imagen no encontrada para cod_insumo ${cod_insumo}` });
+    await item.destroy();
+    response.json({ data: `Imagen eliminada para cod_insumo ${cod_insumo}` });
+  } catch (error) {
+    console.error('Error eliminando imagen insumo:', error instanceof Error ? error.message : String(error));
+    response.status(500).json({ error: "Error al eliminar imagen" });
+  }
+};
+
 export const ObtenerimagenInsPorCod = async (request: Request, response: Response) => {
   const { cod_insumo } = request.params;
   try {

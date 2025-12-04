@@ -37,6 +37,20 @@ export const ObtenerimagenTruPorCod = async (request: Request, response: Respons
   }
 };
 
+export const EliminarImagenTruPorId = async (request: Request, response: Response) => {
+  const { cod_instrumento } = request.params;
+  try {
+    // Buscar por la columna cod_instrumento en lugar de findByPk (que usa id)
+    const item = await imagenes_instrumentos.findOne({ where: { cod_instrumento: String(cod_instrumento) } });
+    if (!item) return response.status(404).json({ error: `Imagen no encontrada para cod_instrumento ${cod_instrumento}` });
+    await item.destroy();
+    response.json({ data: `Imagen eliminada para cod_instrumento ${cod_instrumento}` });
+  } catch (error) {
+    console.error('Error eliminando imagen instrumento:', error instanceof Error ? error.message : String(error));
+    response.status(500).json({ error: "Error al eliminar imagen" });
+  }
+};
+
 export const añadirimagenTru = async (request: Request, response: Response) => {
   try {
     // Esperamos un body JSON con { id_usuario, imagenBase64 }
