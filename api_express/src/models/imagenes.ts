@@ -2,7 +2,7 @@ import { Table, Column, Model, DataType, PrimaryKey, AutoIncrement, HasMany, For
 import Usuario from "./usuario";
 
 @Table({ tableName: "imagenes", timestamps: false })
-class GrupoTeoria extends Model {
+class Imagenes extends Model {
     @PrimaryKey
     @AutoIncrement
     @Column({ type: DataType.INTEGER, field: "id_imagen" })
@@ -16,4 +16,4 @@ class GrupoTeoria extends Model {
     declare imagenB: Buffer | null;
 }
 
-export default GrupoTeoria;
+export default Imagenes;
